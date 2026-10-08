@@ -10,6 +10,18 @@ export class InMemoryStore {
     return session;
   }
 
+  updateSession(id: string, patch: Partial<OnboardingSession>) {
+    const session = this.sessions.get(id);
+
+    if (!session) {
+      return undefined;
+    }
+
+    const next = { ...session, ...patch };
+    this.sessions.set(id, next);
+    return next;
+  }
+
   getSession(id: string) {
     return this.sessions.get(id);
   }

@@ -1,9 +1,13 @@
 export type OnboardingSession = {
   id: string;
   whatsAppId: string;
-  status: "created" | "wallet_connected" | "agent_approved" | "expired";
+  status: "created" | "wallet_connected" | "agent_prepared" | "agent_approved" | "expired";
   createdAt: Date;
   expiresAt: Date;
+  walletAddress?: string;
+  agentAddress?: string;
+  agentName?: string;
+  approvalNonce?: number;
 };
 
 export type UserAccount = {
@@ -13,6 +17,8 @@ export type UserAccount = {
   hyperliquidAccountAddress: string;
   agentAddress?: string;
   agentPrivateKeyCiphertext?: string;
+  agentName?: string;
+  approvalStatus: "prepared" | "approved";
   createdAt: Date;
 };
 

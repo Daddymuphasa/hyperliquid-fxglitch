@@ -12,7 +12,13 @@ const configSchema = z.object({
   WHATSAPP_PHONE_NUMBER_ID: z.string().min(1).default("dev-phone-id"),
   ADMIN_API_KEY: z.string().min(1).default("dev-admin-key"),
   SESSION_SECRET: z.string().min(16).default("development-session-secret"),
-  ENCRYPTION_KEY_BASE64: z.string().min(1).default("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=")
+  ENCRYPTION_KEY_BASE64: z
+    .string()
+    .min(1)
+    .default("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=")
+    .refine((value) => Buffer.from(value, "base64").length === 32, {
+      message: "ENCRYPTION_KEY_BASE64 must decode to exactly 32 bytes."
+    })
 });
 
 export const config = configSchema.parse(process.env);

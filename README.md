@@ -26,6 +26,12 @@ npm run dev
 
 Copy `.env.example` to `.env` and fill the values for your provider accounts.
 
+Generate a 32-byte encryption key for `ENCRYPTION_KEY_BASE64`:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+```
+
 ## Main flows
 
 1. User sends a message to the WhatsApp agent.
