@@ -28,6 +28,19 @@ export function registerTelegramRoutes(app: FastifyInstance, services: Services)
     return reply.type("text/html").send(renderTelegramSetupPage(services.config.PUBLIC_APP_URL));
   });
 
+  app.get("/telegram/login", async (_request, reply) => {
+    return reply.type("text/html").send(renderTelegramLoginPage());
+  });
+
+  app.post("/telegram/login/qr", async (_request, reply) => {
+    const ticket = await services.telegramUserLogin.createQrLoginTicket();
+    return reply.send({
+      ok: true,
+      ...ticket,
+      note: "This page is ready for QR rendering. The next step is wiring Telegram MTProto auth.exportLoginToken so the QR contains a real Telegram login token."
+    });
+  });
+
   app.post("/webhooks/telegram", async (request, reply) => {
     if (request.headers["x-telegram-bot-api-secret-token"] !== services.config.TELEGRAM_WEBHOOK_SECRET) {
       return reply.code(401).send({ error: "Unauthorized Telegram webhook." });
@@ -66,6 +79,67 @@ export function registerTelegramRoutes(app: FastifyInstance, services: Services)
       }
     });
   });
+}
+
+function renderTelegramLoginPage() {
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Telegram QR login</title>
+    <style>
+      body { font-family: Inter, ui-sans-serif, system-ui, sans-serif; margin: 0; background: #f6f7f8; color: #151719; }
+      main { max-width: 760px; margin: 0 auto; padding: 40px 20px; }
+      section { background: white; border: 1px solid #dfe3e6; border-radius: 8px; padding: 24px; }
+      h1 { margin: 0 0 8px; font-size: 28px; letter-spacing: 0; }
+      p { color: #4d565f; line-height: 1.55; }
+      button { padding: 12px 16px; border: 0; border-radius: 6px; background: #111; color: white; cursor: pointer; font-weight: 700; }
+      img { display: block; width: 320px; height: 320px; max-width: 100%; margin-top: 20px; border: 1px solid #dfe3e6; border-radius: 8px; }
+      .notice { background: #fff7e0; color: #5c4300; padding: 12px; border-radius: 6px; }
+      .status { margin-top: 16px; color: #173d22; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section>
+        <h1>Telegram QR login</h1>
+        <p>Use this page when you want the backend to connect as a Telegram user account instead of a bot.</p>
+        <p class="notice">This grants the backend access to the Telegram account you scan with. Use a dedicated Telegram account for trading signals, not your main personal account.</p>
+        <button id="generateButton" type="button">Generate scan code</button>
+        <img id="qrImage" alt="Telegram login QR code" hidden />
+        <p id="status" class="status"></p>
+      </section>
+    </main>
+    <script>
+      const button = document.querySelector("#generateButton");
+      const image = document.querySelector("#qrImage");
+      const status = document.querySelector("#status");
+
+      button.addEventListener("click", async () => {
+        button.disabled = true;
+        status.textContent = "Generating Telegram scan code...";
+
+        try {
+          const response = await fetch("/telegram/login/qr", { method: "POST" });
+          const ticket = await response.json();
+
+          if (!response.ok) {
+            throw new Error(ticket.error || "Unable to generate Telegram scan code.");
+          }
+
+          image.src = ticket.qrDataUrl;
+          image.hidden = false;
+          status.textContent = ticket.note || "Scan this with Telegram, then confirm the login in Telegram.";
+        } catch (error) {
+          status.textContent = error instanceof Error ? error.message : "Something went wrong.";
+        } finally {
+          button.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>`;
 }
 
 function renderTelegramSetupPage(publicAppUrl: string) {

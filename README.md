@@ -62,6 +62,8 @@ Signals are stored as `ready`, `needs_review`, or `rejected`. Live execution is 
 
 Open `/telegram/setup` for setup instructions. The Telegram integration uses a bot token, not a QR login to your personal Telegram account.
 
+For user-account monitoring, open `/telegram/login`. Telegram QR login uses the Telegram client API, not the Bot API, and requires `TELEGRAM_API_ID` and `TELEGRAM_API_HASH`. The page is in place for scanning, with the MTProto login-token generator still to be wired before it can authorize a real account.
+
 ## Useful Hyperliquid docs
 
 - Builder tools index: https://hyperliquid.gitbook.io/hyperliquid-docs/builder-tools

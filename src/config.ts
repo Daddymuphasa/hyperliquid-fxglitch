@@ -15,6 +15,8 @@ const configSchema = z.object({
   TELEGRAM_BOT_TOKEN: z.string().min(1).default("dev-token"),
   TELEGRAM_WEBHOOK_SECRET: z.string().min(1).default("dev-secret"),
   TELEGRAM_ALLOWED_CHAT_ID: z.string().min(1).default("dev-chat"),
+  TELEGRAM_API_ID: z.string().min(1).default("dev-api-id"),
+  TELEGRAM_API_HASH: z.string().min(1).default("dev-api-hash"),
   ENCRYPTION_KEY_BASE64: z
     .string()
     .min(1)
