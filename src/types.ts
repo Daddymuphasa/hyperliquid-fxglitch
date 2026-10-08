@@ -43,3 +43,22 @@ export type TradeRequest = {
   reduceOnly: boolean;
   clientOrderId?: string;
 };
+
+export type SignalDirection = "long" | "short";
+
+export type ParsedTradeSignal = {
+  id: string;
+  source: "telegram";
+  sourceMessageId: string;
+  sourceChatId: string;
+  rawText: string;
+  symbol: string;
+  direction: SignalDirection;
+  entryPrice?: number;
+  stopLoss?: number;
+  takeProfit?: number;
+  confidence: number;
+  status: "rejected" | "needs_review" | "ready";
+  reasons: string[];
+  createdAt: Date;
+};

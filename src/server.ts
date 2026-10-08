@@ -6,6 +6,7 @@ import { createServices } from "./services/index.js";
 import { registerAdminRoutes } from "./routes/admin.js";
 import { registerHealthRoutes } from "./routes/health.js";
 import { registerOnboardingRoutes } from "./routes/onboarding.js";
+import { registerTelegramRoutes } from "./routes/telegram.js";
 import { registerWhatsAppRoutes } from "./routes/whatsapp.js";
 
 const app = Fastify({
@@ -23,6 +24,7 @@ const services = createServices(config);
 
 registerHealthRoutes(app);
 registerWhatsAppRoutes(app, services);
+registerTelegramRoutes(app, services);
 registerOnboardingRoutes(app, services);
 registerAdminRoutes(app, services);
 

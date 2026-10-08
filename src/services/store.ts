@@ -1,9 +1,10 @@
-import type { ConsentGrant, OnboardingSession, UserAccount } from "../types.js";
+import type { ConsentGrant, OnboardingSession, ParsedTradeSignal, UserAccount } from "../types.js";
 
 export class InMemoryStore {
   private readonly sessions = new Map<string, OnboardingSession>();
   private readonly users = new Map<string, UserAccount>();
   private readonly consents = new Map<string, ConsentGrant>();
+  private readonly tradeSignals = new Map<string, ParsedTradeSignal>();
 
   saveSession(session: OnboardingSession) {
     this.sessions.set(session.id, session);
@@ -46,5 +47,18 @@ export class InMemoryStore {
 
   getConsentForUser(userId: string) {
     return this.consents.get(userId);
+  }
+
+  saveTradeSignal(signal: ParsedTradeSignal) {
+    this.tradeSignals.set(signal.id, signal);
+    return signal;
+  }
+
+  listTradeSignals() {
+    return [...this.tradeSignals.values()].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  }
+
+  getTradeSignal(id: string) {
+    return this.tradeSignals.get(id);
   }
 }

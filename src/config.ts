@@ -12,6 +12,9 @@ const configSchema = z.object({
   WHATSAPP_PHONE_NUMBER_ID: z.string().min(1).default("dev-phone-id"),
   ADMIN_API_KEY: z.string().min(1).default("dev-admin-key"),
   SESSION_SECRET: z.string().min(16).default("development-session-secret"),
+  TELEGRAM_BOT_TOKEN: z.string().min(1).default("dev-token"),
+  TELEGRAM_WEBHOOK_SECRET: z.string().min(1).default("dev-secret"),
+  TELEGRAM_ALLOWED_CHAT_ID: z.string().min(1).default("dev-chat"),
   ENCRYPTION_KEY_BASE64: z
     .string()
     .min(1)

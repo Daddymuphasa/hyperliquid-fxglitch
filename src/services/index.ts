@@ -2,6 +2,7 @@ import type { config as appConfig } from "../config.js";
 import { ConsentService } from "./consent-service.js";
 import { CredentialVault } from "./credential-vault.js";
 import { HyperliquidClient } from "./hyperliquid-client.js";
+import { SignalParser } from "./signal-parser.js";
 import { InMemoryStore } from "./store.js";
 import { WhatsAppClient } from "./whatsapp-client.js";
 
@@ -12,6 +13,7 @@ export function createServices(config: AppConfig) {
   const consent = new ConsentService(store);
   const credentialVault = new CredentialVault(config.ENCRYPTION_KEY_BASE64);
   const hyperliquid = new HyperliquidClient(config.HYPERLIQUID_API_URL);
+  const signalParser = new SignalParser();
   const whatsapp = new WhatsAppClient(config);
 
   return {
@@ -19,6 +21,7 @@ export function createServices(config: AppConfig) {
     consent,
     credentialVault,
     hyperliquid,
+    signalParser,
     store,
     whatsapp
   };

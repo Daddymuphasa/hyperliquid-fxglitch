@@ -48,4 +48,22 @@ export function registerAdminRoutes(app: FastifyInstance, services: Services) {
     const state = await services.hyperliquid.getClearinghouseState(user.hyperliquidAccountAddress);
     return reply.send({ ok: true, state });
   });
+
+  app.get("/admin/signals", async () => ({
+    ok: true,
+    signals: services.store.listTradeSignals().map((signal) => ({
+      id: signal.id,
+      source: signal.source,
+      sourceChatId: signal.sourceChatId,
+      symbol: signal.symbol,
+      direction: signal.direction,
+      entryPrice: signal.entryPrice,
+      stopLoss: signal.stopLoss,
+      takeProfit: signal.takeProfit,
+      confidence: signal.confidence,
+      status: signal.status,
+      reasons: signal.reasons,
+      createdAt: signal.createdAt
+    }))
+  }));
 }

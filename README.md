@@ -40,6 +40,28 @@ node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 4. Backend stores the approved agent credential encrypted and marks the user as trade-enabled.
 5. Admin can submit trades only for users with active consent and risk limits.
 
+## Telegram signal ingestion
+
+Configure Telegram to send bot updates to:
+
+```text
+POST /webhooks/telegram
+```
+
+The request must include Telegram's `X-Telegram-Bot-Api-Secret-Token` header matching `TELEGRAM_WEBHOOK_SECRET`. Set `TELEGRAM_ALLOWED_CHAT_ID` to the trading-signal group ID so messages from other chats are rejected.
+
+Current parser support:
+
+- Symbol detection such as `BTC`, `ETH`, or `SOLUSDC`.
+- Direction detection from `long`, `short`, `buy`, or `sell`.
+- Entry price from `entry`, `enter`, `buy`, or `sell`.
+- Stop loss from `sl`, `stop`, or `stop loss`.
+- Take profit from `tp`, `target`, or `take profit`.
+
+Signals are stored as `ready`, `needs_review`, or `rejected`. Live execution is intentionally not automatic yet.
+
+Open `/telegram/setup` for setup instructions. The Telegram integration uses a bot token, not a QR login to your personal Telegram account.
+
 ## Useful Hyperliquid docs
 
 - Builder tools index: https://hyperliquid.gitbook.io/hyperliquid-docs/builder-tools
